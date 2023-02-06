@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Data;
+using SP23.P02.Web.Features.Roles;
+using SP23.P02.Web.Features.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // sets up our database connection
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")));
+
+//Look at these
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<DataContext>();
+//
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,6 +30,24 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
     await SeedHelper.MigrateAndSeed(db);
+
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    await roleManager.CreateAsync(new Role
+    { Name = "Admin" });
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    await userManager.CreateAsync(new User
+    {
+        UserName = "bob"
+    }, "Password123");
+
+    var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
+    //await signInManager.CreateAsync(new Role)
+
+    //await signInManager.SignInAsync(new User
+    //{
+    //    Username = "bob"
+    //}, true);
 }
 
 // Configure the HTTP request pipeline.
