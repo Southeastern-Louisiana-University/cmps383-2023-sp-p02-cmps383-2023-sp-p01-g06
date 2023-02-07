@@ -35,19 +35,37 @@ using (var scope = app.Services.CreateScope())
     await roleManager.CreateAsync(new Role
     { Name = "Admin" });
 
+    await roleManager.CreateAsync(new Role
+    {
+        Name = "User"
+    });
+
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     await userManager.CreateAsync(new User
     {
-        UserName = "bob"
-    }, "Password123");
+        Username = "bob"
+    }, "Password123!");
+
+    await userManager.CreateAsync(new User
+    {
+        Username = "sue"
+    }, "Password123!");
+
+    await userManager.CreateAsync(new User
+    {
+        Username = "galkadi"
+    }, "Password123!");
 
     var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
-    //await signInManager.CreateAsync(new Role)
+
 
     //await signInManager.SignInAsync(new User
     //{
-    //    Username = "bob"
+    //    Username = "bob",
+    //    Password = "Password123!"
     //}, true);
+
+
 }
 
 // Configure the HTTP request pipeline.
