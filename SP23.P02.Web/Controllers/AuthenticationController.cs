@@ -14,5 +14,17 @@ namespace SP23.P02.Web.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+        //public void Login()
+        //{
+        //    var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
+        //    await signInManager.SignInAsync(new User
+        //    {
+        //        Username = "bob",
+        //        Password = "Password123!"
+        //    }, true);
+
+        //    return;
+        //}
     }
 }

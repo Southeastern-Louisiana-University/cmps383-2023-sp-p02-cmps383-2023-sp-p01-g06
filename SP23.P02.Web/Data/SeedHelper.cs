@@ -28,32 +28,32 @@ public static class SeedHelper
             await dataContext.SaveChangesAsync();
         }
 
-        var users = dataContext.Set<User>();
+        //var users = dataContext.Set<User>();
 
-        if (!await users.AnyAsync())
-        {
-            dataContext.Set<User>()
-                .Add(new User
-                {
-                    Username = "bob",
-                    Password = "Password123!"
-                });
+        //if (!await users.AnyAsync())
+        //{
+        //    dataContext.Set<User>()
+        //        .Add(new User
+        //        {
+        //            Username = "bob",
+        //            Password = "Password123!"
+        //        });
 
-            dataContext.Set<User>()
-                .Add(new User
-                {
-                    Username = "sue",
-                    Password = "Password123!"
-                });
+        //    dataContext.Set<User>()
+        //        .Add(new User
+        //        {
+        //            Username = "sue",
+        //            Password = "Password123!"
+        //        });
 
-            dataContext.Set<User>()
-                .Add(new User
-                {
-                    Username = "galkadi",
-                    Password = "Password123!"
-                });
+        //    dataContext.Set<User>()
+        //        .Add(new User
+        //        {
+        //            Username = "galkadi",
+        //            Password = "Password123!"
+        //        });
 
-        }
+        //}
 
         var roles = dataContext.Set<Role>();
 

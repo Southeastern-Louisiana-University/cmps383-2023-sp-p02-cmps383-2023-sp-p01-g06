@@ -66,7 +66,7 @@ using (var scope = app.Services.CreateScope())
 
     //signInManager part
     var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
-
+    
 
     if (result.Succeeded)
     {
