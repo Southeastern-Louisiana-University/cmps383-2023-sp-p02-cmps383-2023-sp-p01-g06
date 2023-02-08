@@ -160,7 +160,7 @@ namespace SP23.P02.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TrainStations");
+                    b.ToTable("TrainStations", (string)null);
                 });
 
             modelBuilder.Entity("SP23.P02.Web.Features.UserRoles.UserRole", b =>

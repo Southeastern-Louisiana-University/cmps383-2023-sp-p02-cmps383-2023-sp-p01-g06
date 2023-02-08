@@ -28,37 +28,36 @@ public static class SeedHelper
             await dataContext.SaveChangesAsync();
         }
 
-        //var Users = dataContext.Set<User>();
+        var users = dataContext.Set<User>();
 
-        //if (!await Users.AnyAsync())
-        //{
-        //    dataContext.Set<User>()
-        //        .Add(new User
-        //        {
-        //            Username = "bob",
-        //            Password = "Password123!"
-        //        });
+        if (!await users.AnyAsync())
+        {
+            dataContext.Set<User>()
+                .Add(new User
+                {
+                    Username = "bob",
+                    Password = "Password123!"
+                });
 
-        //    dataContext.Set<User>()
-        //        .Add(new User
-        //        {
-        //            Username = "sue",
-        //            Password = "Password123!"
-        //        });
+            dataContext.Set<User>()
+                .Add(new User
+                {
+                    Username = "sue",
+                    Password = "Password123!"
+                });
 
-        //    dataContext.Set<User>()
-        //        .Add(new User
-        //        {
-        //            Username = "galkadi",
-        //            Password = "Password123!"
-        //        });
+            dataContext.Set<User>()
+                .Add(new User
+                {
+                    Username = "galkadi",
+                    Password = "Password123!"
+                });
 
-        //    await dataContext.SaveChangesAsync();
-        //}
+        }
 
-        var Roles = dataContext.Set<Role>();
+        var roles = dataContext.Set<Role>();
 
-        if (!await Roles.AnyAsync())
+        if (!await roles.AnyAsync())
         {
             dataContext.Set<Role>()
                 .Add(new Role

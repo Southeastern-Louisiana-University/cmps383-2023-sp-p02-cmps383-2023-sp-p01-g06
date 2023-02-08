@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.Users;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SP23.P02.Web.Features.UserRoles
 {

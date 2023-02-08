@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Data;
 using SP23.P02.Web.Features.Roles;
+using SP23.P02.Web.Features.UserRoles;
 using SP23.P02.Web.Features.Users;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<DataContext>();
+
+
+
 //
 
 builder.Services.AddControllers();
@@ -28,9 +32,11 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    //DataContext part
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
     await SeedHelper.MigrateAndSeed(db);
 
+    //roleManager part
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
     await roleManager.CreateAsync(new Role
     { Name = "Admin" });
@@ -40,30 +46,37 @@ using (var scope = app.Services.CreateScope())
         Name = "User"
     });
 
+
+    //userManager part
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-    await userManager.CreateAsync(new User
-    {
-        Username = "bob"
-    }, "Password123!");
+    var result = await userManager.CreateAsync(new User
+        {
+            Username = "bob"
+        }, "Password123!");
 
-    await userManager.CreateAsync(new User
-    {
-        Username = "sue"
-    }, "Password123!");
+    //await userManager.CreateAsync(new User
+    //{
+    //    Username = "sue"
+    //}, "Password123!");
 
-    await userManager.CreateAsync(new User
-    {
-        Username = "galkadi"
-    }, "Password123!");
+    //await userManager.CreateAsync(new User
+    //{
+    //    Username = "galkadi"
+    //}, "Password123!");
 
+    //signInManager part
     var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
 
 
-    //await signInManager.SignInAsync(new User
-    //{
-    //    Username = "bob",
-    //    Password = "Password123!"
-    //}, true);
+    if (result.Succeeded)
+    {
+        await signInManager.SignInAsync(new User
+        {
+            Username = "bob",
+            Password = "Password123!"
+        }, true);
+    }
+
 
 
 }
