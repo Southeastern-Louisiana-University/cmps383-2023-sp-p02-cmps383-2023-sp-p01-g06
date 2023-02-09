@@ -8,8 +8,8 @@ namespace SP23.P02.Web.Features.UserRoles
 {
     public class UserRole : IdentityUserRole<int>
     {
-        public virtual User? Users { get; set; }
-        public virtual Role? Roles { get; set; }
+        public virtual User User { get; set; }
+        public virtual Role Role { get; set; }
 
         
     }

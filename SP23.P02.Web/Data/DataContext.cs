@@ -32,11 +32,11 @@ public class DataContext : IdentityDbContext<User, Role, int, IdentityUserClaim<
 
         userRoleBuilder.HasKey(x => new { x.UserId, x.RoleId });
 
-        userRoleBuilder.HasOne(x => x.Roles)
+        userRoleBuilder.HasOne(x => x.Role)
             .WithMany(x => x.Users)
             .HasForeignKey(x => x.RoleId);
 
-        userRoleBuilder.HasOne(x => x.Users)
+        userRoleBuilder.HasOne(x => x.User)
             .WithMany(x => x.Roles)
             .HasForeignKey(x => x.UserId);
 

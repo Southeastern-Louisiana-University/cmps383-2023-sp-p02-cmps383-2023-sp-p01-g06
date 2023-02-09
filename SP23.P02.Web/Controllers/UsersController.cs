@@ -48,7 +48,7 @@ namespace SP23.P02.Web.Controllers
                 .Select(x => new UserDto
                 {
                     Id = x.Id,
-                    Username = x.Username
+                    UserName = x.UserName
                     //Add list of users here
                 });
         }

@@ -39,7 +39,9 @@ using (var scope = app.Services.CreateScope())
     //roleManager part
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
     await roleManager.CreateAsync(new Role
-    { Name = "Admin" });
+    { 
+        Name = "Admin" 
+    });
 
     await roleManager.CreateAsync(new Role
     {
@@ -49,33 +51,44 @@ using (var scope = app.Services.CreateScope())
 
     //userManager part
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-    var result = await userManager.CreateAsync(new User
-        {
-            Username = "bob"
-        }, "Password123!");
 
-    //await userManager.CreateAsync(new User
-    //{
-    //    Username = "sue"
-    //}, "Password123!");
+    await userManager.CreateAsync(new User
+    {
+        UserName = "bob"
+    }, "Password123!");
 
-    //await userManager.CreateAsync(new User
-    //{
-    //    Username = "galkadi"
-    //}, "Password123!");
+    await userManager.CreateAsync(new User
+    {
+        UserName = "sue"
+    }, "Password123!");
+
+    await userManager.CreateAsync(new User
+    {
+        UserName = "galkadi"
+    }, "Password123!");
+
+
+    var bob = db.Users.First(x => x.UserName == "bob");
+    var sue = db.Users.First(x => x.UserName == "sue");
+    var galkadi = db.Users.First(x => x.UserName == "galkadi");
+
+    //userManager.Users.
+
+    await userManager.AddToRoleAsync(bob, "User");
+    await userManager.AddToRoleAsync(sue, "User");
+    await userManager.AddToRoleAsync(galkadi, "Admin");
+
 
     //signInManager part
+
+
     var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
     
 
-    if (result.Succeeded)
-    {
-        await signInManager.SignInAsync(new User
-        {
-            Username = "bob",
-            Password = "Password123!"
-        }, true);
-    }
+    //This adds a role to a user
+    
+
+    //await signInManager.SignInAsync(bob, true);
 
 
 

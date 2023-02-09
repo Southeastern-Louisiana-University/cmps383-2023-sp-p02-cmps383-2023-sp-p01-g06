@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.TrainStations;
+using SP23.P02.Web.Features.UserRoles;
 using SP23.P02.Web.Features.Users;
 
 namespace SP23.P02.Web.Data;
@@ -28,52 +30,8 @@ public static class SeedHelper
             await dataContext.SaveChangesAsync();
         }
 
-        //var users = dataContext.Set<User>();
-
-        //if (!await users.AnyAsync())
-        //{
-        //    dataContext.Set<User>()
-        //        .Add(new User
-        //        {
-        //            Username = "bob",
-        //            Password = "Password123!"
-        //        });
-
-        //    dataContext.Set<User>()
-        //        .Add(new User
-        //        {
-        //            Username = "sue",
-        //            Password = "Password123!"
-        //        });
-
-        //    dataContext.Set<User>()
-        //        .Add(new User
-        //        {
-        //            Username = "galkadi",
-        //            Password = "Password123!"
-        //        });
-
-        //}
-
-        var roles = dataContext.Set<Role>();
-
-        if (!await roles.AnyAsync())
-        {
-            dataContext.Set<Role>()
-                .Add(new Role
-                {
-                    Name = "Admin"
-                });
-
-            dataContext.Set<Role>()
-                .Add(new Role
-                {
-                    Name = "User"
-                });
-
-            await dataContext.SaveChangesAsync();
-        }
-
-
     }
+
+
+
 }
