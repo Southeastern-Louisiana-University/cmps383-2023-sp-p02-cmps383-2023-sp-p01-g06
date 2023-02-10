@@ -48,9 +48,9 @@ namespace SP23.P02.Web.Controllers
                 .Select(x => new UserDto
                 {
                     Id = x.Id,
-                    UserName = x.UserName
-                    //Add list of users here
+                    UserName = x.UserName,
+                    Roles = x.Roles.Select(y => y.Role!.Name).ToArray()
                 });
         }
     }
-}
+    }

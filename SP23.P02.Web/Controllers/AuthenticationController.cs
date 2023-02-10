@@ -3,13 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Data;
 using SP23.P02.Web.Features.Login;
+using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.Users;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace SP23.P02.Web.Controllers
 {
     [Route("/api/authentication/")]
+    [ApiController]
     public class AuthenticationController : ControllerBase
 
     {
@@ -35,18 +39,18 @@ namespace SP23.P02.Web.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto user)
         {
-            var userFound = _userManager.Users.First(x => x.UserName == user.UserName);
+            var userFound = await _userManager.FindByNameAsync(user.UserName);
             var passwordIsValid = await _userManager.CheckPasswordAsync(userFound, user.Password);
 
-            if (passwordIsValid)
+            if (passwordIsValid && userFound != null)
             {
                 await _signInManager.SignInAsync(userFound, false);
                 //await _signInManager.CheckPasswordSignInAsync(userFound, user.Password, false);
                 return Ok(_dataContext.Users.Select(x => new UserDto
                 {
-                    Id = x.Id,
-                    UserName = x.UserName,
-                    Roles = x.Roles
+                    Id = userFound.Id,
+                    UserName = user.UserName,
+                    Roles = userFound.Roles.Select(y => y.Role.Name.ToString()).ToArray()
                 }));
             }
             else
@@ -69,7 +73,7 @@ namespace SP23.P02.Web.Controllers
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    Roles = user.Roles
+                    Roles = user.Roles.Select(y => y.Role.Name.ToString()).ToArray()
                 });
             }
             else

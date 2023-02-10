@@ -11,48 +11,48 @@ namespace SP23.P02.Web.Controllers
     public class RolesController : ControllerBase
     {
 
-        private readonly DbSet<Role> roles;
-        private readonly DataContext dataContext;
+        //private readonly DbSet<Role> roles;
+        //private readonly DataContext dataContext;
 
-        public RolesController(DataContext dataContext)
-        {
-            this.dataContext = dataContext;
-            roles = dataContext.Set<Role>();
-        }
+        //public RolesController(DataContext dataContext)
+        //{
+        //    this.dataContext = dataContext;
+        //    roles = dataContext.Set<Role>();
+        //}
 
-        [HttpGet]
-        //[Authorize (Roles = "Admin")]
-        public IQueryable<RoleDto> GetAllRoles()
-        {   
-            return GetRoleDtos(roles);
-        }
+        //[HttpGet]
+        ////[Authorize (Roles = "Admin")]
+        //public IQueryable<RoleDto> GetAllRoles()
+        //{   
+        //    return GetRoleDtos(roles);
+        //}
 
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult<RoleDto> GetRoleById(int id)
-        {
-            var result = GetRoleDtos(roles.Where(x => x.Id == id)).FirstOrDefault();
-            if (result == null)
-            {
-                return NotFound();
-            }
+        //[HttpGet]
+        //[Route("{id}")]
+        //public ActionResult<RoleDto> GetRoleById(int id)
+        //{
+        //    var result = GetRoleDtos(roles.Where(x => x.Id == id)).FirstOrDefault();
+        //    if (result == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(result);
-        }
-
-
+        //    return Ok(result);
+        //}
 
 
-        private static IQueryable<RoleDto> GetRoleDtos(IQueryable<Role> roles)
-        {
-            return roles
-                .Select(x => new RoleDto
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                    //Add list of users here
-                });
-        }
+
+
+        //    private static IQueryable<RoleDto> GetRoleDtos(IQueryable<Role> roles)
+        //    {
+        //        return roles
+        //            .Select(x => new RoleDto
+        //            {
+        //                Id = x.Id,
+        //                Name = x.Name
+        //                //Add list of users here
+        //            });
+        //    }
     }
 
 }
