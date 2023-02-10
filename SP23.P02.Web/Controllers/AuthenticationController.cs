@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Data;
 using SP23.P02.Web.Features.Login;
 using SP23.P02.Web.Features.Users;
@@ -36,17 +37,17 @@ namespace SP23.P02.Web.Controllers
         {
             var userFound = _userManager.Users.First(x => x.UserName == user.UserName);
             var passwordIsValid = await _userManager.CheckPasswordAsync(userFound, user.Password);
-            
+
             if (passwordIsValid)
             {
-                await _signInManager.PasswordSignInAsync(userFound, user.Password, true, false);
+                await _signInManager.SignInAsync(userFound, false);
                 //await _signInManager.CheckPasswordSignInAsync(userFound, user.Password, false);
-                return Ok(new UserDto
+                return Ok(_dataContext.Users.Select(x => new UserDto
                 {
-                    Id = userFound.Id,
-                    UserName = user.UserName,
-                    Roles = userFound.Roles
-                });
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Roles = x.Roles
+                }));
             }
             else
             {
@@ -54,14 +55,15 @@ namespace SP23.P02.Web.Controllers
             }
         }
 
+
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> Me()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            
-            
 
-            if (user != null) 
+
+
+            if (user != null)
             {
                 return Ok(new UserDto
                 {
@@ -75,6 +77,7 @@ namespace SP23.P02.Web.Controllers
                 return BadRequest();
             }
         }
+
 
 
     }
