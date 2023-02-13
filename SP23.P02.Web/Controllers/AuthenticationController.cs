@@ -40,18 +40,26 @@ namespace SP23.P02.Web.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto user)
         {
             var userFound = await _userManager.FindByNameAsync(user.UserName);
+            
+            if(userFound == null)
+            {
+                return BadRequest();
+            }
+            var rolesList = await _userManager.GetRolesAsync(userFound);
+
             var passwordIsValid = await _userManager.CheckPasswordAsync(userFound, user.Password);
 
-            if (passwordIsValid && userFound != null)
+            if (passwordIsValid)
             {
                 await _signInManager.SignInAsync(userFound, false);
                 //await _signInManager.CheckPasswordSignInAsync(userFound, user.Password, false);
-                return Ok(_dataContext.Users.Select(x => new UserDto
+                return Ok(new 
                 {
                     Id = userFound.Id,
-                    UserName = user.UserName,
-                    Roles = userFound.Roles.Select(y => y.Role.Name.ToString()).ToArray()
-                }));
+                    UserName = userFound.UserName,
+                    User = userFound,
+                    Roles = rolesList
+                });
             }
             else
             {
@@ -64,16 +72,18 @@ namespace SP23.P02.Web.Controllers
         public async Task<ActionResult<UserDto>> Me()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            var rolesList = await _userManager.GetRolesAsync(user);
 
 
 
             if (user != null)
             {
-                return Ok(new UserDto
+                return Ok(new
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    Roles = user.Roles.Select(y => y.Role.Name.ToString()).ToArray()
+                    User = user,
+                    Roles = rolesList
                 });
             }
             else
