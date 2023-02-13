@@ -14,16 +14,34 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(build
 
 //Look at these
 builder.Services.AddAuthentication();
+
 builder.Services.AddAuthorization();
+
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<DataContext>();
 
 
 
-//
+
+
 
 builder.Services.AddControllers();
+
+
+//Literally the magic line I was looking for
+//I recall he mentionewd this in class and it took somew googling to find it!
+//Things now seem to work again!!!
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -83,17 +101,16 @@ using (var scope = app.Services.CreateScope())
 
 
     var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<User>>();
-    
+
+
 
     //This adds a role to a user
-    
+
 
     //await signInManager.SignInAsync(bob, true);
 
-
-
 }
-
+app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -103,7 +120,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+
+
 
 app.MapControllers();
 

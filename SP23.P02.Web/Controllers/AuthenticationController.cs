@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Data;
@@ -7,6 +8,7 @@ using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.Users;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 
@@ -14,6 +16,7 @@ namespace SP23.P02.Web.Controllers
 {
     [Route("/api/authentication/")]
     [ApiController]
+    [Authorize]
     public class AuthenticationController : ControllerBase
 
     {
@@ -29,6 +32,7 @@ namespace SP23.P02.Web.Controllers
 
         [HttpPost]
         [Route("/loginTest")]
+        [AllowAnonymous]
         public async Task<ActionResult> LoginTest()
         {
             var user = _dataContext.Users.First(x => x.UserName == "bob");
@@ -37,6 +41,7 @@ namespace SP23.P02.Web.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Login(LoginDto user)
         {
             var userFound = await _userManager.FindByNameAsync(user.UserName);
@@ -57,7 +62,6 @@ namespace SP23.P02.Web.Controllers
                 {
                     Id = userFound.Id,
                     UserName = userFound.UserName,
-                    User = userFound,
                     Roles = rolesList
                 });
             }
@@ -82,7 +86,6 @@ namespace SP23.P02.Web.Controllers
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    User = user,
                     Roles = rolesList
                 });
             }
@@ -90,6 +93,13 @@ namespace SP23.P02.Web.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return StatusCode(200);
         }
 
 

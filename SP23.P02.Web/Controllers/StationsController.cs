@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SP23.P02.Web.Data;
 using SP23.P02.Web.Features.TrainStations;
+using SP23.P02.Web.Features.UserRoles;
+using Microsoft.AspNetCore.Identity;
 
 namespace SP23.P02.Web.Controllers;
 
@@ -39,6 +41,7 @@ public class StationsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public ActionResult<TrainStationDto> CreateStation(TrainStationDto dto)
     {
         if (IsInvalid(dto))
@@ -62,6 +65,7 @@ public class StationsController : ControllerBase
 
     [HttpPut]
     [Route("{id}")]
+    [Authorize]
     public ActionResult<TrainStationDto> UpdateStation(int id, TrainStationDto dto)
     {
         if (IsInvalid(dto))
