@@ -10,6 +10,7 @@ namespace SP23.P02.Web.Controllers;
 
 [Route("api/stations")]
 [ApiController]
+//[Authorize (Roles = "Admin")]
 public class StationsController : ControllerBase
 {
     private readonly DbSet<TrainStation> stations;
@@ -65,7 +66,7 @@ public class StationsController : ControllerBase
 
     [HttpPut]
     [Route("{id}")]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public ActionResult<TrainStationDto> UpdateStation(int id, TrainStationDto dto)
     {
         if (IsInvalid(dto))
@@ -81,6 +82,8 @@ public class StationsController : ControllerBase
 
         station.Name = dto.Name;
         station.Address = dto.Address;
+        //stop gap measure
+        station.Manager = dataContext.Users.Find(dto.ManagerId);
 
         dataContext.SaveChanges();
 
@@ -91,6 +94,7 @@ public class StationsController : ControllerBase
 
     [HttpDelete]
     [Route("{id}")]
+    [Authorize(Roles = "Admin")]
     public ActionResult DeleteStation(int id)
     {
         var station = stations.FirstOrDefault(x => x.Id == id);

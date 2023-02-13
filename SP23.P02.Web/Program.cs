@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using SP23.P02.Web.Data;
 using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.UserRoles;
@@ -37,6 +40,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Events.OnRedirectToLogin = context =>
     {
         context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = 403;
         return Task.CompletedTask;
     };
 });
@@ -110,7 +119,21 @@ using (var scope = app.Services.CreateScope())
     //await signInManager.SignInAsync(bob, true);
 
 }
+app.UseAuthentication();
 app.UseAuthorization();
+
+
+
+//app.UseRouting();
+//app.UseEndpoints(endpoint =>
+//{ 
+//    endpoints.MapControllerRoute(
+//        nameof: "default",
+//        PatternBuilder: "{controller=Home}/{action=Index}/{id?}"
+//});
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
