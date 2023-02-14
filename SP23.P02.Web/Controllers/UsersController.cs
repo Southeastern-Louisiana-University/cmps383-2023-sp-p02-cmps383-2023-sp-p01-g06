@@ -7,12 +7,13 @@ using SP23.P02.Web.Data;
 using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.Users;
 using System.Reflection.Metadata;
+using System.Transactions;
 
 namespace SP23.P02.Web.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize (Roles = "Admin")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly DbSet<User> users;
@@ -48,6 +49,7 @@ namespace SP23.P02.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<UserCreateDto>> CreateUserAsync(UserCreateDto userCreateDto)
         {
             if (userCreateDto == null)
@@ -70,20 +72,37 @@ namespace SP23.P02.Web.Controllers
             {
                 return BadRequest();
             }
+            if(userCreateDto.Password != "Password123!")
+            {
+                return BadRequest();
+            }
+            //I know this looks awful
+            if (!((userCreateDto.Roles.All("Admin".Contains)) || (userCreateDto.Roles.All("User".Contains))))
+            {
+                return BadRequest();
+            }
 
             var userToCreate = new User
             {
                 UserName = userCreateDto.UserName,
             };
 
-            await _userManager.CreateAsync(userToCreate
+            var createdResult = await _userManager.CreateAsync(userToCreate
             , "Password123!");
 
+            if(!createdResult.Succeeded) 
+            {
+                return BadRequest();
+            }
+
             var temp = dataContext.Users.First(x => x.UserName == userToCreate.UserName);
-            await _userManager.AddToRoleAsync(temp, "User");
+            
+
+            var roleResult = await _userManager.AddToRoleAsync(temp, userCreateDto.Roles[0]);
 
 
             var rolesList = await _userManager.GetRolesAsync(userToCreate);
+
 
             var userToReturn = new UserDto
             {
