@@ -72,7 +72,7 @@ namespace SP23.P02.Web.Controllers
             {
                 return BadRequest();
             }
-            if(userCreateDto.Password != "Password123!")
+            if(userCreateDto.Password.IsNullOrEmpty())
             {
                 return BadRequest();
             }
@@ -88,7 +88,7 @@ namespace SP23.P02.Web.Controllers
             };
 
             var createdResult = await _userManager.CreateAsync(userToCreate
-            , "Password123!");
+            , userCreateDto.Password);
 
             if(!createdResult.Succeeded) 
             {

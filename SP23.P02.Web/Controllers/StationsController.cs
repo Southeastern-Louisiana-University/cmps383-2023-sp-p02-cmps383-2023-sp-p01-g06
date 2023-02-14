@@ -54,19 +54,26 @@ public class StationsController : ControllerBase
         {
             Name = dto.Name,
             Address = dto.Address,
+            Manager = dataContext.Users.Find(dto.ManagerId)
+            
         };
+
         stations.Add(station);
 
         dataContext.SaveChanges();
 
         dto.Id = station.Id;
+        //dto.Name = station.Name;
+        //dto.Address = station.Address;
+        //dto.ManagerId = station.Manager.Id;
+
 
         return CreatedAtAction(nameof(GetStationById), new { id = dto.Id }, dto);
     }
 
     [HttpPut]
     [Route("{id}")]
-    [Authorize (Roles = "Admin")]
+    [Authorize]
     public ActionResult<TrainStationDto> UpdateStation(int id, TrainStationDto dto)
     {
         if (IsInvalid(dto))
@@ -88,13 +95,16 @@ public class StationsController : ControllerBase
         dataContext.SaveChanges();
 
         dto.Id = station.Id;
+        dto.Name = station.Name;
+        dto.Address = station.Address;
+        dto.ManagerId = station.Manager.Id;
 
         return Ok(dto);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public ActionResult DeleteStation(int id)
     {
         var station = stations.FirstOrDefault(x => x.Id == id);
