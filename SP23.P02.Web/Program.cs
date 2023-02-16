@@ -119,8 +119,7 @@ using (var scope = app.Services.CreateScope())
     //await signInManager.SignInAsync(bob, true);
 
 }
-app.UseAuthentication();
-app.UseAuthorization();
+
 
 
 
@@ -140,8 +139,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
 
 
 
