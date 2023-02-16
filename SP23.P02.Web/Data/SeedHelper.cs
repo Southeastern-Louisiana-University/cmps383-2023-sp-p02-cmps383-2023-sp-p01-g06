@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SP23.P02.Web.Features.Roles;
 using SP23.P02.Web.Features.TrainStations;
+using SP23.P02.Web.Features.UserRoles;
+using SP23.P02.Web.Features.Users;
 
 namespace SP23.P02.Web.Data;
 
@@ -26,4 +30,7 @@ public static class SeedHelper
             await dataContext.SaveChangesAsync();
         }
     }
+
+
+
 }
